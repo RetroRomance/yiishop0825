@@ -3,23 +3,23 @@ namespace backend\models;
 
 use yii\db\ActiveRecord;
 
-class Brand extends ActiveRecord{
-    //public $img;
+class Article extends ActiveRecord{
     //验证规则
     public function rules(){
         return[
-            [['name','intro','sort','status','logo'],'required'],//姓名不能为s空
-           // ['img','file','extensions'=>['jpg','png','gif','JPEG'],'maxSize'=>1024*1024]
+            [['name','intro','article_category_id','sort','status'],'required'],//姓名不能为s空
         ];
     }
     //对应名称
     public function attributeLabels(){
         return [
-            'name'=>'品名',
+            'name'=>'文章名',
             'intro'=>'简介',
+            'article_category_id'=>'分类id',
             'sort'=>'排序',
             'status'=>'状态',
-            'logo'=>'logo图片'
+
+
         ];
     }
 }
