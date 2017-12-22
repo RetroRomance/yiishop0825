@@ -31,6 +31,7 @@ $js=<<<JS
         var tr = $(this).closest('tr');
         if(confirm('确定删除？删除后不可恢复哦')){
             $.get("del",{id:tr.attr('data-id')},function(){
+                
                 tr.fadeOut();
             });
         }
