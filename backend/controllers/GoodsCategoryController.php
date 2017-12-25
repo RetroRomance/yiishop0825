@@ -12,6 +12,15 @@ class GoodsCategoryController extends Controller{
         return $this->render('index',['model'=>$model]);
     }
 
+    public function actions()
+    {
+        return [
+            'upload' => [
+                'class' => 'ueditor/UEditorAction',
+            ]
+        ];
+    }
+
     //添加
     public function actionAdd(){
         $request=new Request();
