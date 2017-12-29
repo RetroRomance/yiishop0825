@@ -54,11 +54,6 @@ class GoodsCategoryController extends Controller{
 
         $request=new Request();
         $delete=GoodsCategory::deleteAll(['id'=>$id]);
-//        var_dump($delete);exit;
-//        $delete->delete();
-
-
-
 
     }
 
