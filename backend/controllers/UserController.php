@@ -5,6 +5,8 @@ use backend\models\LoginForm;
 use backend\models\User;
 use yii\captcha\CaptchaAction;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
+use yii\rbac\Role;
 use yii\web\Controller;
 use yii\web\Request;
 
@@ -134,6 +136,46 @@ class UserController extends Controller{
             }
         }
         return $this->render('edit',['model'=>$model]);
+    }
+    //    //给用户关联角色
+//$authManager->assign($role,1);
+//    //取消用户和角色的关联
+//$authManager->revoke($role,1);
+//$authManager->revokeAll(1);
+//    //获取用户的角色
+//$authManager->getRolesByUser(1);//[role,role]
+    //添加用户的角色关联
+    public function actionAddUser($id){
+        $authManager=\Yii::$app->authManager;
+        $model=new Role();
+        $model->name='管理员';
+//        $request=\Yii::$app->request;
+//        $all=$authManager->getRoles();
+//        $arr=ArrayHelper::map($all,'name','description');
+//        if ($request->isPost){
+//            $model->load($request->post());
+//            if ($model->validate()){
+                $authManager->assign($model,$id);
+//            }
+//        }
+//        return $this->render('add-user',['model'=>$model,'arr'=>$arr]);
+    }
+
+    //修改角色的用户关联
+    public function actionEditUser($id)
+    {
+        $authManager = \Yii::$app->authManager;
+        $model = new Role();
+        $request = \Yii::$app->request;
+        $all=$authManager->getRoles();
+        $arr=ArrayHelper::map($all,'name','description');
+        if ($request->isPost) {
+            $model->load($request->post());
+            if ($model->validate()) {
+                $authManager->revoke($model, $id);
+            }
+        }
+        return $this->render('add-user', ['model' => $model,'arr'=>$arr]);
     }
 
 }

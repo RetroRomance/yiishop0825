@@ -95,4 +95,28 @@ class User extends ActiveRecord implements IdentityInterface {
     {
         return $this->getAuthKey()===$authKey;
     }
+    public function getMenus(){
+        $menuItems=[];
+        //获取所有一级菜单
+        $menus=Menu::find()->where(['parent_id'=>0])->all();
+        foreach ($menus as $menu){
+            //获取一级菜单的子菜单
+            $children=Menu::find()->where(['parent_id'=>$menu->id])->all();
+            $items=[];
+
+            foreach ($children as $child){
+                //判断用户是否有该菜单的权限
+                if(\Yii::$app->user->can($child->url)){
+                    $items[]=['label'=>$child->name,'url'=>[$child->url]];
+                }
+
+            }
+            //没有子菜单的遗迹菜单不需要显示
+            if($items){
+                $menuItems[]=['label'=>$menu->name,'items'=>$items];
+            }
+
+        }
+        return $menuItems;
+    }
 }

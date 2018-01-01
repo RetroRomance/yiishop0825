@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\Brand;
 use yii\db\Query;
 use yii\helpers\Json;
@@ -94,5 +95,14 @@ class BrandController extends Controller{
             }
         }
         return $this->render('add',['model'=>$model]);
+    }
+
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className()
+            ]
+        ];
     }
 }

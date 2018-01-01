@@ -18,7 +18,10 @@
             <td><?=$user->last_login_time?></td>
 <!--            <td><img src="--><!--" width="100px"></td>-->
             <td><?=\yii\bootstrap\Html::a('修改',['user/edit','id'=>$user->id],['class'=>'btn btn-warning'])?>
-                <?=\yii\bootstrap\Html::submitButton('删除',['class'=>'btn btn-danger'])?></td>
+                <?=\yii\bootstrap\Html::submitButton('删除',['class'=>'btn btn-danger'])?>
+                <?=\yii\bootstrap\Html::a('添加用户角色',['user/add-user','id'=>$user->id],['class'=>'btn btn-warning'])?>
+                <?=\yii\bootstrap\Html::a('修改用户角色',['user/edit-user','id'=>$user->id],['class'=>'btn btn-warning'])?>
+            </td>
         </tr>
     <?php endforeach; ?>
 </table>

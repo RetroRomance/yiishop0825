@@ -11,7 +11,8 @@
         <tr data-id="<?=$rbac->name?>">
             <td><?=$rbac->name?></td>
             <td><?=$rbac->description?></td>
-            <td><?=\yii\bootstrap\Html::a('修改',['rbac/edit-role','name'=>$rbac->name],['class'=>'btn btn-warning'])?>
+            <td>
+                <?=\yii\bootstrap\Html::a('修改',['rbac/edit-role','name'=>$rbac->name],['class'=>'btn btn-warning'])?>
                 <?=\yii\bootstrap\Html::submitButton('删除',['class'=>'btn btn-danger'])?></td>
         </tr>
     <?php endforeach; ?>

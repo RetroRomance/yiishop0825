@@ -34,12 +34,11 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => '管理员列表', 'url' => ['/user/index']],
-    ];
+    $menuItems = [];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => '登录', 'url' => ['/user/login']];
     } else {
+        $menuItems=Yii::$app->user->identity->getMenus();
         $menuItems[] = '<li>'
             . Html::beginForm(['/user/logout'], 'post')
             . Html::submitButton(

@@ -209,40 +209,6 @@ class RbacController extends Controller{
     }
 
 
-//    //给用户关联角色
-//$authManager->assign($role,1);
-//    //取消用户和角色的关联
-//$authManager->revoke($role,1);
-//$authManager->revokeAll(1);
-//    //获取用户的角色
-//$authManager->getRolesByUser(1);//[role,role]
-    //添加用户的角色关联
-    public function actionAddUser(){
-        $authManager=\Yii::$app->authManager;
-        $model=new Role();
-        $request=\Yii::$app->request;
-        if ($request->isPost){
-            $model->load($request->post());
-            if ($model->validate()){
-                $authManager->assign($model,$model->id);
-            }
-        }
-        return $this->render('add-user',['model'=>$model]);
-    }
 
-    //取消角色的用户关联
-    public function actionDelUser()
-    {
-        $authManager = \Yii::$app->authManager;
-        $model = new Role();
-        $request = \Yii::$app->request;
-        if ($request->isPost) {
-            $model->load($request->post());
-            if ($model->validate()) {
-                $authManager->revoke($model, $model->id);
-            }
-        }
-        return $this->render('add-user', ['model' => $model]);
-    }
 
 }

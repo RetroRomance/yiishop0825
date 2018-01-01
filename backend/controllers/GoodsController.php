@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\Goods;
 use backend\models\GoodsDayCount;
 use backend\models\GoodsIntro;
@@ -131,6 +132,15 @@ class GoodsController extends Controller{
             }
         }
         return $this->render('add',['model'=>$model]);
+    }
+
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className()
+            ]
+        ];
     }
 
 
