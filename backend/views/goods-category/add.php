@@ -5,7 +5,7 @@
 $form=\yii\bootstrap\ActiveForm::begin();
 echo $form->field($model,'name')->textInput();//名称
 //echo $form->field($model,'intro')->textInput();//简介
-echo $form->field($model,'intro')->widget('ueditor/UEditor',[]);
+echo $form->field($model,'intro')->widget('kucha\ueditor\UEditor',[]);
 echo $form->field($model,'parent_id')->hiddenInput();//上级分类
 //=============ztree================
 $this->registerCssFile('@web/zTree/css/zTreeStyle/zTreeStyle.css');

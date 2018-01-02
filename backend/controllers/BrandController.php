@@ -63,6 +63,8 @@ class BrandController extends Controller{
 //    //删除
     public function actionDel($id){
         $request=new Request();
+        $delete=Brand::deleteAll();
+        exit();
         $delete=Brand::findOne(($id));
         $delete->load($request->get());
             $delete->status=-1;
@@ -97,12 +99,12 @@ class BrandController extends Controller{
         return $this->render('add',['model'=>$model]);
     }
 
-    public function behaviors()
-    {
-        return [
-            'rbac'=>[
-                'class'=>RbacFilter::className()
-            ]
-        ];
-    }
+//    public function behaviors()
+//    {
+//        return [
+//            'rbac'=>[
+//                'class'=>RbacFilter::className()
+//            ]
+//        ];
+//    }
 }

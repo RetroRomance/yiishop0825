@@ -2,9 +2,12 @@
 namespace backend\controllers;
 
 use backend\filters\RbacFilter;
+use backend\models\Brand;
 use backend\models\Goods;
+use backend\models\GoodsCategory;
 use backend\models\GoodsDayCount;
 use backend\models\GoodsIntro;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\Request;
@@ -78,6 +81,10 @@ class GoodsController extends Controller{
         $model3=new GoodsDayCount();
         $gd=$time->format('Ymd');
         $coun=GoodsDayCount::find()->where(['day'=>$gd])->count();//当日添加条数
+        $all=GoodsCategory::find()->where(['>','parent_id',0])->all();
+        $arr=ArrayHelper::map($all,'id','name');
+        $all2=Brand::find()->all();
+        $arr2=ArrayHelper::map($all2,'id','name');
         if ($request->isPost){
             $model->load($request->post());
             $model2->load($request->post());
@@ -104,7 +111,7 @@ class GoodsController extends Controller{
                 var_dump($model->getErrors());
             }
         }else{
-            return $this->render('add',['model'=>$model,'model2'=>$model2]);
+            return $this->render('add',['model'=>$model,'model2'=>$model2,'arr'=>$arr,'arr2'=>$arr2]);
         }
     }
 
@@ -134,14 +141,14 @@ class GoodsController extends Controller{
         return $this->render('add',['model'=>$model]);
     }
 
-    public function behaviors()
-    {
-        return [
-            'rbac'=>[
-                'class'=>RbacFilter::className()
-            ]
-        ];
-    }
+//    public function behaviors()
+//    {
+//        return [
+//            'rbac'=>[
+//                'class'=>RbacFilter::className()
+//            ]
+//        ];
+//    }
 
 
 }

@@ -16,7 +16,7 @@ class GoodsCategoryController extends Controller{
     {
         return [
             'upload' => [
-                'class' => 'ueditor/UEditorAction',
+                'class' => 'kucha\ueditor\UEditorAction',
             ]
         ];
     }
@@ -36,7 +36,6 @@ class GoodsCategoryController extends Controller{
                     //创建根节点
                     $model->makeRoot();
                 }
-
                 //保存到数据库
                 $model->save();
                 \Yii::$app->session->setFlash('success','添加成功!');

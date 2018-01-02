@@ -4,7 +4,7 @@
  */
 $form=\yii\bootstrap\ActiveForm::begin();
 echo $form->field($model,'name')->textInput();
-echo $form->field($model,'goods_category_id')->textInput(['type'=>'number']);//()
+echo $form->field($model,'goods_category_id')->dropDownList($arr);//()
 echo $form->field($model,'is_on_sale',['inline'=>1])->radioList(['1'=>'上架','0'=>'下架']);
 echo $form->field($model,'status',['inline'=>1])->radioList(['1'=>'正常']);
 echo $form->field($model,'logo')->hiddenInput();
@@ -62,7 +62,7 @@ $this->registerJs($js);
 
 //==================webuploader===================
 
-echo $form->field($model,'brand_id')->textInput(['type'=>'number']);
+echo $form->field($model,'brand_id')->dropDownList($arr2);
 echo $form->field($model,'market_price')->textInput(['type'=>'number']);
 echo $form->field($model,'shop_price')->textInput(['type'=>'number']);
 echo $form->field($model,'stock')->textInput(['type'=>'number']);
