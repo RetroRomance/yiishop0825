@@ -42,7 +42,7 @@ return [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            //'suffix' =>'.html',
+            //'suffix' =>'.html',//伪静态地址
             'rules' => [
             ],
         ],

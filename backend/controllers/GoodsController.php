@@ -127,18 +127,26 @@ class GoodsController extends Controller{
     //修改
     public function actionEdit($id){
         $request=new Request();
-        $model=Goods::findOne($id);;
+        $model=Goods::findOne($id);
+        $model2=new GoodsIntro();
+        $all=GoodsCategory::find()->where(['>','parent_id',0])->all();
+        $arr=ArrayHelper::map($all,'id','name');
+        $all2=Brand::find()->all();
+        $arr2=ArrayHelper::map($all2,'id','name');
         if($request->isPost){
             $model->load($request->post());
+            $model2->load($request->post());
             if ($model->validate()){
                 $model->save(false);
+                $model2->goods_id=$model->id;//给详情表添id(详情表ID要由文章表给)
+                $model2->save(false);//存详情content
                 \Yii::$app->session->setFlash('success','添加成功!');
                 return $this->redirect(['goods/index']);
             }else{
                 var_dump($model->getErrors());
             }
         }
-        return $this->render('add',['model'=>$model]);
+        return $this->render('add',['model'=>$model,'model2'=>$model2,'arr'=>$arr,'arr2'=>$arr2]);
     }
 
 //    public function behaviors()

@@ -37,14 +37,20 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
+        'sms'=>[
+            'class'=>\frontend\components\Sms::className(),
+            'ak'=>'LTAIWfmbf7fsX5xT',
+            'sk'=>'KvupXpL8gcbUHi9Ry2vQ0D4nG2nYgq',
+            'sign'=>'建鑫',
+            'template'=>'SMS_120120263',
+        ],
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        */
     ],
     'params' => $params,
 ];

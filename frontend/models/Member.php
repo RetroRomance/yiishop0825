@@ -1,33 +1,71 @@
 <?php
-namespace backend\models;
 
-use yii\db\ActiveRecord;
+namespace frontend\models;
+
+use Yii;
 use yii\web\IdentityInterface;
 
-class User extends ActiveRecord implements IdentityInterface {
-
-    public $new_pwd;
-    public $sure_pwd;
+/**
+ * This is the model class for table "member".
+ *
+ * @property integer $id
+ * @property string $username
+ * @property string $auth_key
+ * @property string $password_hash
+ * @property string $email
+ * @property string $tel
+ * @property string $last_login_time
+ * @property string $last_login_ip
+ * @property integer $status
+ * @property string $created_at
+ * @property string $updated_at
+ */
+class Member extends \yii\db\ActiveRecord implements IdentityInterface
+{
+    //public $checkcode;
+    /**
+     * @inheritdoc
+     */
     public static function tableName()
     {
-        return 'user';
+        return 'member';
     }
-    public function rules(){
-        return[
-            [['username','password_hash','email'],'required'],//姓名不能为s空
-            ['sure_pwd','compare','compareAttribute'=>'new_pwd'],
-            [['new_pwd','sure_pwd'],'safe']
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['last_login_time', 'created_at', 'updated_at'], 'safe'],
+            [['status'], 'integer'],
+            [['username'], 'string', 'max' => 50],
+            [['auth_key'], 'string', 'max' => 32],
+            [['password_hash', 'email'], 'string', 'max' => 100],
+            [['tel'], 'string', 'max' => 11],
+            //['checkcode','captcha','captchaAction'=>'site/captcha'],
+            [['last_login_time'], 'dateTime'],
+            [['last_login_ip'], 'string'],
         ];
     }
 
-    public function attributeLabels(){
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
         return [
-            'username'=>'姓名',
-            'password_hash'=>'密码',
-            'email'=>'邮箱',
-            'new_pwd'=>'新密码',
-            'sure_pwd'=>'确认密码',
-
+            'id' => 'ID',
+            'username' => '用户名',
+            'auth_key' => 'AuthKey',
+            'password_hash' => '密码',
+            'email' => '邮箱',
+            'tel' => '电话',
+            'last_login_time' => '最后登录时间',
+            'last_login_ip' => '最后登录IP',
+            'status' => '状态',
+            'created_at' => '创建时间',
+            'updated_at' => '修改时间',
         ];
     }
 
@@ -95,27 +133,6 @@ class User extends ActiveRecord implements IdentityInterface {
     {
         return $this->getAuthKey()===$authKey;
     }
-    public function getMenus(){
-        $menuItems=[];
-        //获取所有一级菜单
-        $menus=Menu::find()->where(['parent_id'=>0])->all();
-        foreach ($menus as $menu){
-            //获取一级菜单的子菜单
-            $children=Menu::find()->where(['parent_id'=>$menu->id])->all();
-            $items=[];
 
-            foreach ($children as $child){
-                //判断用户是否有该菜单的权限
-                if(\Yii::$app->user->can($child->url)){
-                    $items[]=['label'=>$child->name,'url'=>[$child->url]];
-                }
-            }
-            //没有子菜单的遗迹菜单不需要显示
-            if($items){
-                $menuItems[]=['label'=>$menu->name,'items'=>$items];
-            }
 
-        }
-        return $menuItems;
-    }
 }

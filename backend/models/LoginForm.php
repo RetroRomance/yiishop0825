@@ -11,13 +11,13 @@ class LoginForm extends Model{
 
 
     public function rules()
-    {
-        return [
-            [['username','password_hash','code'],'required'],
-            ['code','captcha','captchaAction'=>'user/captcha'],
-            ['rememberme', 'safe'],
-        ];
-    }
+{
+    return [
+        [['username','password_hash','code'],'required'],
+        ['code','captcha','captchaAction'=>'user/captcha'],
+        ['rememberme', 'safe'],
+    ];
+}
     public function attributeLabels(){
         return [
             'username'=>'姓名',

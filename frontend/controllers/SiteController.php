@@ -1,6 +1,8 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\models\GoodsCategory;
+use frontend\models\Member;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -12,42 +14,44 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use yii\web\Request;
 
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
+    public $enableCsrfValidation = false;
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
-                'rules' => [
-                    [
-                        'actions' => ['signup'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
+//    public function behaviors()
+//    {
+//        return [
+//            'access' => [
+//                'class' => AccessControl::className(),
+//                'only' => ['logout', 'signup'],
+//                'rules' => [
+//                    [
+//                        'actions' => ['signup'],
+//                        'allow' => true,
+//                        'roles' => ['?'],
+//                    ],
+//                    [
+//                        'actions' => ['logout'],
+//                        'allow' => true,
+//                        'roles' => ['@'],
+//                    ],
+//                ],
+//            ],
+//            'verbs' => [
+//                'class' => VerbFilter::className(),
+//                'actions' => [
+//                    'logout' => ['post'],
+//                ],
+//            ],
+//        ];
+//    }
 
     /**
      * @inheritdoc
@@ -61,6 +65,8 @@ class SiteController extends Controller
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+                'minLength'=>4,
+                'maxLength'=>4,
             ],
         ];
     }
@@ -72,8 +78,11 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+
         return $this->render('index');
     }
+
+
 
     /**
      * Logs in a user.
@@ -82,18 +91,20 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+        //登陆表单
+        $model = new SignupForm();
+        $request = \Yii::$app->request;
+        if ($request->isPost) {
+            $model->load($request->post(),'');
+//            var_dump($model);exit();
+            if ($model->login()) {
+                //提示信息
+                \Yii::$app->session->setFlash('success', '登陆成功');
+                //跳转
+                return $this->redirect(['site/index']);
+            }
         }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
-        }
+        return $this->render('login');
     }
 
     /**
@@ -142,24 +153,64 @@ class SiteController extends Controller
     }
 
     /**
-     * Signs user up.
+     * Signs user up.//注册
      *
      * @return mixed
      */
     public function actionSignup()
     {
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup()) {
-                if (Yii::$app->getUser()->login($user)) {
-                    return $this->goHome();
-                }
+        $request=new Request();
+        $model = new Member();
+        if ($request->isPost){
+            $model->load($request->post(),'');
+            if ($model->validate()){
+                //加密
+                $mima=$model->password_hash;
+                $model->password_hash= \Yii::$app->security->generatePasswordHash($mima);
+                $model->created_at=date('Y-m-d',time());
+                //保存到数据库
+                $model->save();
+                \Yii::$app->session->setFlash('success','添加成功!');
+            }else{//打印错误
+                var_dump($model->getErrors());
+                var_dump($model->checkcode);
+                exit;
             }
+        }else{
+            return $this->render('signup');
+        }
+    }
+
+    //测试阿里大于短信功能
+    public function actionSms($phone){
+        //正则验证电话号码格式
+
+        $code=rand(100000,999999);
+        $result=\Yii::$app->sms->send($phone,['code'=>$code]);
+        if ($result->Code=='OK'){
+            //发送成功
+            //将短信验证码保存到redis
+            $redis=new \Redis();
+            $redis->connect('127.0.0.1');
+            $redis->set('code_'.$phone,$code,1800);
+            return 'true';
+        }else{
+            //发送失败
+            return '短信发送失败';
         }
 
-        return $this->render('signup', [
-            'model' => $model,
-        ]);
+    }
+
+    //验证是否用户名唯一
+    public function actionUserOnly($username){
+        $user=Member::find()->where(['=','username',$username])->all();
+        if ($user){
+            //存在
+            echo 'false';
+        }else{
+            //不存在
+            echo 'true';
+        }
     }
 
     /**
