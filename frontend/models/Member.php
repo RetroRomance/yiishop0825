@@ -44,7 +44,7 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
             [['password_hash', 'email'], 'string', 'max' => 100],
             [['tel'], 'string', 'max' => 11],
             //['checkcode','captcha','captchaAction'=>'site/captcha'],
-            [['last_login_time'], 'dateTime'],
+            //[['last_login_time'], 'dateTime'],
             [['last_login_ip'], 'string'],
         ];
     }

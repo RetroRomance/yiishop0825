@@ -478,12 +478,15 @@
                         <label for=""><span>*</span>所在地区：</label>
                         <select id="cmbProvince" name="cmbProvince"></select>
                         <select id="cmbCity" name="cmbCity"></select>
-                        <select id="cmbArea" name="cmbArea"><option><?=$address->cmbArea?></option></select>
+                        <select id="cmbArea" name="cmbArea"></select>
                     </li>
                     <li>
                         <label for=""><span>*</span>详细地址：</label>
                         <input type="text" name="address" class="txt address" value="<?=$address->address?>" />
                     </li>
+                        <script type="text/javascript">
+                            addressInit('cmbProvince', 'cmbCity', 'cmbArea','<?=$address->cmbProvince?>','<?=$address->cmbCity?>','<?=$address->cmbArea?>');
+                        </script>
                     <li>
                         <label for=""><span>*</span>手机号码：</label>
                         <input type="text" name="tel" class="txt" value="<?=$address->tel?>" />
@@ -598,9 +601,6 @@
     </p>
 </div>
 <!-- 底部版权 end -->
-<script type="text/javascript">
-    addressInit('cmbProvince', 'cmbCity', 'cmbArea');
 
-</script>
 </body>
 </html>

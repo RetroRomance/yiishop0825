@@ -599,14 +599,17 @@
 
             <!-- 商品基本信息区域 start -->
             <div class="goodsinfo fl ml10">
+                <?php foreach($model as $goods):?>
                 <ul>
+
                     <li><span>商品编号： </span>971344</li>
-                    <li class="market_price"><span>定价：</span><em>￥6399.00</em></li>
-                    <li class="shop_price"><span>本店价：</span> <strong>￥6299.00</strong> <a href="">(降价通知)</a></li>
-                    <li><span>上架时间：</span>2012-09-12</li>
-                    <li class="star"><span>商品评分：</span> <strong></strong><a href="">(已有21人评价)</a></li> <!-- 此处的星级切换css即可 默认为5星 star4 表示4星 star3 表示3星 star2表示2星 star1表示1星 -->
+                    <li class="market_price"><span>定价：</span><em>￥<?=$goods->market_price?></em></li>
+                    <li class="shop_price"><span>本店价：</span> <strong>￥<?=$goods->shop_price?></strong> <a href="">(降价通知)</a></li>
+                    <li><span>上架时间：</span><?=$goods->create_time?></li>
+                    <li class="star"><span>热度：</span> <?=$goods->view_times?></a></li> <!-- 此处的星级切换css即可 默认为5星 star4 表示4星 star3 表示3星 star2表示2星 star1表示1星 -->
+
                 </ul>
-                <form action="" method="post" class="choose">
+                <form action="<?=\yii\helpers\Url::to(['goods/addto-cart'])?>" method="get" class="choose">
                     <ul>
 
                         <li>
@@ -624,6 +627,7 @@
                             <dl>
                                 <dt>&nbsp;</dt>
                                 <dd>
+                                    <input type="hidden" name="goods_id" value="<?=$goods->id?>"/>
                                     <input type="submit" value="" class="add_btn" />
                                 </dd>
                             </dl>
@@ -631,6 +635,7 @@
 
                     </ul>
                 </form>
+                <?php endforeach; ?>
             </div>
             <!-- 商品基本信息区域 end -->
         </div>

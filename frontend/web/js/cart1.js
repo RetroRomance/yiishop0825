@@ -24,6 +24,8 @@ $(function(){
 		});
 
 		$("#total").text(total.toFixed(2));
+		var goods_id=$(this).closest('tr').attr('data-id');
+		chageNum(goods_id,$(amount).val());
 	});
 
 	//增加
@@ -40,6 +42,8 @@ $(function(){
 		});
 
 		$("#total").text(total.toFixed(2));
+        var goods_id=$(this).closest('tr').attr('data-id');
+        chageNum(goods_id,$(amount).val());
 	});
 
 	//直接输入
@@ -58,6 +62,37 @@ $(function(){
 		});
 
 		$("#total").text(total.toFixed(2));
+        var goods_id=$(this).closest('tr').attr('data-id');
+        chageNum(goods_id,$(this).val());
 
 	});
+	//删除
+    $(".del").click(function(){
+        var amount = $(this).parent().find(".amount");
+        $(amount).val(parseInt($(amount).val())[0]);
+
+        //小计
+        var subtotal = parseFloat($(this).parent().parent().find(".col3 span").text()) * parseInt($(amount).val());
+        $(this).parent().parent().find(".col5 span").text(subtotal.toFixed(2));
+        //总计金额
+        var total = 0;
+        $(".col5 span").each(function(){
+            total += parseFloat($(this).text());
+        });
+
+        $("#total").text(total.toFixed(2));
+        var goods_id=$(this).closest('tr');
+        if(confirm('确定删除？删除后不可恢复哦')){
+            $.post("del-cart",{goods_id:goods_id.attr('data-id')},function(){
+                goods_id.fadeOut();
+            });
+            //chageNum(goods_id,$(amount).val());
+        }
+      	// if (goods_id!=null){
+      	// 	goods_id.fadeOut();
+		// }
+    });
 });
+var chageNum=function (goods_id,amount) {
+	$.post("change",{goods_id:goods_id,amount:amount});
+}

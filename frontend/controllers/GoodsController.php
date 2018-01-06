@@ -7,10 +7,13 @@ use backend\models\GoodsCategory;
 use backend\models\GoodsGallery;
 use backend\models\GoodsIntro;
 use frontend\models\Address;
+use frontend\models\Cart;
+use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\Controller;
 use frontend\models\SignatureHelper;
+use yii\web\Cookie;
 use yii\web\Request;
 
 class GoodsController extends Controller{
@@ -50,9 +53,130 @@ class GoodsController extends Controller{
     //商品详情
     public function actionShow($id){
         $model=Goods::find()->where(['=','id',$id])->all();//商品信息
+        Goods::updateAllCounters(['view_times'=>1],['id'=>$id]);
         $model2=GoodsIntro::find()->where(['=','goods_id',$id])->all();//详情信息
         $model3=GoodsGallery::find()->where(['=','id',$id])->all();//相册
         return $this->render('show',['model'=>$model,'model2'=>$model2,'model3'=>$model3]);
+    }
+
+    //商品添加到购物车
+    public function actionAddtoCart($goods_id,$amount){
+
+        if (Yii::$app->user->isGuest){//未登录.购物车数据保存到cookie
+            //读cookie
+            $cookies=\Yii::$app->request->cookies;
+            if ($cookies->has('cart')){
+                $value=$cookies->getValue('cart');
+                $cart=unserialize($value);//取出反序列化
+            }else{
+                $cart=[];
+            }
+            //$cart[2]=3
+            //判断购物车中是否存在该商品,存在,数量累加,不存在,直接赋值
+            if(array_key_exists($goods_id,$cart)){
+                $cart[$goods_id] += $amount;
+            }else{
+                $cart[$goods_id]=$amount;
+            }
+
+            $cookies=\Yii::$app->response->cookies;
+            $cookie=new Cookie();
+            $cookie->name='cart';
+            $cookie->value=serialize($cart);
+            $cookies->add($cookie);
+        }else{       //已登录,数据保存到数据表
+            $request=new Request();
+            $model=new Cart();
+            if ($request->isGet) {
+                $model->load($request->get(), '');
+                $model->goods_id = $goods_id;
+                $model->amount = $amount;
+                $model->member_id =Yii::$app->user->id;
+                $model->save();
+            }
+        }
+        return $this->redirect(['goods/cart']);
+    }
+
+    //购物车页面
+    public function actionCart(){
+        //判断用户是否登录
+        if (Yii::$app->user->isGuest){//未登录.购物车数据从cookie获取
+            //读cookie
+            $cookies=\Yii::$app->request->cookies;
+            $value=$cookies->getValue('cart');
+            $cart=unserialize($value);//取出反序列化
+            $ids=array_keys($cart);
+        }else{//已登录,购物车数据从数据表获取
+            $id=Yii::$app->user->id;
+            //array(1) { [24]=> string(1) "3" }
+            $car=Cart::find()->where(['=','member_id',$id])->all();
+            $ids=ArrayHelper::map($car,'goods_id','goods_id');
+            $cart=ArrayHelper::map($car,'goods_id','amount');
+        }
+
+        $models=Goods::find()->where(['in','id',$ids])->all();
+        return $this->renderPartial('cart',['models'=>$models,'cart'=>$cart]);
+    }
+
+    //修改购物车商品数量
+    public function actionChange(){
+        //goods_id不变 amount为新
+        $goods_id=Yii::$app->request->post('goods_id');
+        $amount=Yii::$app->request->post('amount');
+
+            if (Yii::$app->user->isGuest) {//未登录,修改cookie购物车数量
+                //读cookie
+                $cookies=\Yii::$app->request->cookies;
+                if ($cookies->has('cart')){
+                    $value=$cookies->getValue('cart');
+                    $cart=unserialize($value);//取出反序列化
+                }else{
+                    $cart=[];
+                }
+                $cart[$goods_id]=$amount;
+                $cookies=\Yii::$app->response->cookies;
+                $cookie=new Cookie();
+                $cookie->name='cart';
+                $cookie->value=serialize($cart);
+                $cookies->add($cookie);
+            }else{//已登录,改数据表中物品数量
+                $id=Yii::$app->user->id;
+                $request=new Request();
+                $model=Cart::findOne(['goods_id'=>$goods_id,'member_id'=>$id]);
+                if ($request->isPost) {
+                    $model->load($request->get(), '');
+                    $val=$model->amount = $amount;
+                    Cart::updateAll(['amount'=>$val],['id'=>$model->id]);
+
+                }
+            }
+    }
+
+    //删除购物车记录
+    public function actionDelCart(){
+        $goods_id=Yii::$app->request->post('goods_id');
+        if (Yii::$app->user->isGuest) {//未登录,删除cookie购物车数量
+            //读cookie
+            $cookies=\Yii::$app->request->cookies;
+            if ($cookies->has('cart')){
+                $value=$cookies->getValue('cart');
+                $cart=unserialize($value);//取出反序列化
+            }else{
+                $cart=[];
+            }
+
+            unset($cart[$goods_id]);
+            $cookies=\Yii::$app->response->cookies;
+            $cookie=new Cookie();
+            $cookie->name='cart';
+            $cookie->value=serialize($cart);
+            $cookies->add($cookie);
+
+        }else{  //已登录,删数据库中的数据
+            $id=Yii::$app->user->id;
+            Cart::deleteAll('member_id=:member_id AND goods_id=:goods_id',[':member_id'=>$id,':goods_id'=>$goods_id]);
+        }
     }
 
 
@@ -122,7 +246,6 @@ class GoodsController extends Controller{
                 if ($model->sort){
                     $one=Address::findOne(['sort'=>1]);
                     Address::updateAll(['sort'=>0],['id'=>$one->id]);//添加时若为默认则清理掉之前的默认
-                    $model->sort=1;
                 }else{
                     $model->sort=0;
                 }
@@ -179,6 +302,9 @@ class GoodsController extends Controller{
         Address::deleteAll(['id'=>$id]);
         return $this->redirect('address?id='.\Yii::$app->user->id);
     }
+
+
+    //订单
 
 
 

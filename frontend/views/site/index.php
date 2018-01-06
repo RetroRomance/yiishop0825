@@ -138,6 +138,7 @@
             <div class="cat_bd">
                 <?=\frontend\controllers\GoodsController::getCategories()?>
             </div>
+        </div>
         <!--  商品分类部分 end-->
 
         <div class="navitems fl">

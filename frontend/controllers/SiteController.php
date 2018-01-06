@@ -1,10 +1,12 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\models\Cart;
 use frontend\models\GoodsCategory;
 use frontend\models\Member;
 use Yii;
 use yii\base\InvalidParamException;
+use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -99,7 +101,36 @@ class SiteController extends Controller
 //            var_dump($model);exit();
             if ($model->login()) {
                 //提示信息
-                \Yii::$app->session->setFlash('success', '登陆成功');
+
+                //cookie中的购物信息存入数据库
+                //读cookie
+                $cookies=\Yii::$app->request->cookies;
+                if ($cookies->has('cart')){
+                    $value=$cookies->getValue('cart');
+                    $cart=unserialize($value);//取出并反序列化
+                }else{
+                    $cart=[];
+                }
+
+                foreach ($cart as $k=>$v){//将cookie中的购物车信息循环放到数据库中
+                    $model=Cart::findOne(['goods_id'=>$k,'member_id'=>Yii::$app->user->id]);
+                    if ($model){//判断购物车中是否存在该商品,存在,数量累加,不存在,直接赋值
+                        //有,则该条数据amount+cookie中对应的数量
+                        $val=$model->amount += $v;
+                        Cart::updateAll(['amount'=>$val],['id'=>$model->id]);
+                    }else{
+                        $car=new Cart();
+                        //无,根据goods_id添加新数据
+                        $car->member_id=Yii::$app->user->id;
+                        $car->goods_id=$k;
+                        $car->amount=$v;
+                        $car->save();
+                    }
+                }
+
+
+
+
                 //跳转
                 return $this->redirect(['site/index']);
             }
@@ -167,10 +198,11 @@ class SiteController extends Controller
                 //加密
                 $mima=$model->password_hash;
                 $model->password_hash= \Yii::$app->security->generatePasswordHash($mima);
-                $model->created_at=date('Y-m-d',time());
+                //$model->created_at=date('Y-m-d',time());
                 //保存到数据库
                 $model->save();
                 \Yii::$app->session->setFlash('success','添加成功!');
+                return $this->redirect(['site/login']);
             }else{//打印错误
                 var_dump($model->getErrors());
                 var_dump($model->checkcode);
