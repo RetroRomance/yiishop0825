@@ -86,13 +86,10 @@ $(function(){
             $.post("del-cart",{goods_id:goods_id.attr('data-id')},function(){
                 goods_id.fadeOut();
             });
-            //chageNum(goods_id,$(amount).val());
         }
-      	// if (goods_id!=null){
-      	// 	goods_id.fadeOut();
-		// }
     });
+
 });
 var chageNum=function (goods_id,amount) {
 	$.post("change",{goods_id:goods_id,amount:amount});
-}
+};

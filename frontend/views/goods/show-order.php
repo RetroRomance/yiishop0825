@@ -2,20 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <title>收货地址</title>
+    <title>订单页面</title>
     <link rel="stylesheet" href="/style/base.css" type="text/css">
     <link rel="stylesheet" href="/style/global.css" type="text/css">
     <link rel="stylesheet" href="/style/header.css" type="text/css">
     <link rel="stylesheet" href="/style/home.css" type="text/css">
-    <link rel="stylesheet" href="/style/address.css" type="text/css">
+    <link rel="stylesheet" href="/style/order.css" type="text/css">
     <link rel="stylesheet" href="/style/bottomnav.css" type="text/css">
     <link rel="stylesheet" href="/style/footer.css" type="text/css">
 
     <script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>
     <script type="text/javascript" src="/js/header.js"></script>
     <script type="text/javascript" src="/js/home.js"></script>
-    <script type="text/javascript" src="/js/jsAddress.js"></script>
-
 </head>
 <body>
 <!-- 顶部导航 start -->
@@ -437,7 +435,7 @@
         <div class="menu_wrap">
             <dl>
                 <dt>订单中心 <b></b></dt>
-                <dd><b>.</b><a href="">我的订单</a></dd>
+                <dd class="cur"><b>.</b><a href="">我的订单</a></dd>
                 <dd><b>.</b><a href="">我的关注</a></dd>
                 <dd><b>.</b><a href="">浏览历史</a></dd>
                 <dd><b>.</b><a href="">我的团购</a></dd>
@@ -445,7 +443,7 @@
 
             <dl>
                 <dt>账户中心 <b></b></dt>
-                <dd class="cur"><b>.</b><a href="">账户信息</a></dd>
+                <dd><b>.</b><a href="">账户信息</a></dd>
                 <dd><b>.</b><a href="">账户余额</a></dd>
                 <dd><b>.</b><a href="">消费记录</a></dd>
                 <dd><b>.</b><a href="">我的积分</a></dd>
@@ -464,57 +462,51 @@
 
     <!-- 右侧内容区域 start -->
     <div class="content fl ml10">
-        <div class="address_hd">
-            <h3>收货地址薄</h3>
-            <?php foreach($model2 as $address): ?>
-            <dl id="<?=$address->id?>">
-                <dt ><?=$address->username?> <?=$address->cmbProvince?> <?=$address->cmbCity?> <?=$address->cmbArea?> <?=$address->address?> <?=$address->tel?> </dt>
-                <dd>
-                    <a href="http://www.yii2shop.com/goods/edit-ads" >修改</a>
-                    <a href="http://www.yii2shop.com/goods/del-ads" >删除</a>
-                    <?php if ($address->sort){}else{
-                        echo '<a href="http://www.yii2shop.com/goods/moren">设为默认地址</a>';
-                    } ?>
-                </dd>
+        <div class="order_hd">
+            <h3>我的订单</h3>
+            <dl>
+                <dt>便利提醒：</dt>
+                <dd>待付款（0）</dd>
+                <dd>待确认收货（0）</dd>
+                <dd>待自提（0）</dd>
             </dl>
-            <?php endforeach; ?>
+
+            <dl>
+                <dt>特色服务：</dt>
+                <dd><a href="">我的预约</a></dd>
+                <dd><a href="">夺宝箱</a></dd>
+            </dl>
         </div>
 
-        <div class="address_bd mt10">
-            <h4>新增收货地址</h4>
-            <form action="address" name="address_form" method="post">
-                <input type="hidden" name="member_id" value="<?=Yii::$app->user->id?>"/>
-                <ul>
-                    <li>
-                        <label for=""><span>*</span>收 货 人：</label>
-                        <input type="text" name="username" class="txt" />
-                    </li>
-                    <li>
-                        <label for=""><span>*</span>所在地区：</label>
-                        <select id="cmbProvince" name="cmbProvince"></select>
-                        <select id="cmbCity" name="cmbCity"></select>
-                        <select id="cmbArea" name="cmbArea"></select>
-                    </li>
-                    <li>
-                        <label for=""><span>*</span>详细地址：</label>
-                        <input type="text" name="address" class="txt address"  />
-                    </li>
-                    <li>
-                        <label for=""><span>*</span>手机号码：</label>
-                        <input type="text" name="tel" class="txt" />
-                    </li>
-                    <li>
-                        <label for="">&nbsp;</label>
-                        <input type="checkbox" name="sort" class="check" />设为默认地址
-                    </li>
-                    <li>
-                        <label for="">&nbsp;</label>
-                        <input type="submit" name="" class="btn" value="保存" />
-                    </li>
-                </ul>
-            </form>
-        </div>
+        <div class="order_bd mt10">
+            <table class="orders">
+                <thead>
+                <tr>
+                    <th width="10%">订单号</th>
+                    <th width="20%">订单商品</th>
+                    <th width="10%">收货人</th>
+                    <th width="20%">订单金额</th>
+                    <th width="20%">下单时间</th>
+                    <th width="10%">订单状态</th>
+                    <th width="10%">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach($ogd as $og): ?>
+                <tr data-id="<?=$og->order_id?>">
+                    <td><a href=""><?=$og->order_id?></a></td>
+                    <td><a href=""><img src="<?=$og->logo?>" alt="" /></a></td>
+                    <td><?=$og->goods_name?></td>
+                    <td>￥<?=$og->price?> 货到付款</td>
+                    <td></td>
+                    <td></td>
+                    <td><a href="">查看</a> | <a href="">删除</a></td>
+                </tr>
 
+                <?php endforeach;?>
+                </tbody>
+            </table>
+        </div>
     </div>
     <!-- 右侧内容区域 end -->
 </div>
@@ -612,8 +604,5 @@
     </p>
 </div>
 <!-- 底部版权 end -->
-<script type="text/javascript">
-    addressInit('cmbProvince', 'cmbCity', 'cmbArea');
-</script>
 </body>
 </html>

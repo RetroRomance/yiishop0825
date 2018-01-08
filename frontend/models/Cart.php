@@ -14,6 +14,7 @@ use Yii;
  */
 class Cart extends \yii\db\ActiveRecord
 {
+    public $total;
     /**
      * @inheritdoc
      */
@@ -29,6 +30,7 @@ class Cart extends \yii\db\ActiveRecord
     {
         return [
             [['goods_id', 'amount', 'member_id'], 'integer'],
+            [['total'],'safe'],
         ];
     }
 
