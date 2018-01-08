@@ -82,8 +82,8 @@
                     <div class="uclist mt10">
                         <ul class="list1 fl">
                             <li><a href="">用户信息></a></li>
-                            <li><a href="">我的订单></a></li>
-                            <li><a href="">收货地址></a></li>
+                            <li><a href="http://www.yii2shop.com/goods/order">我的订单></a></li>
+                            <li><a href="http://www.yii2shop.com/goods/address">收货地址></a></li>
                             <li><a href="">我的收藏></a></li>
                         </ul>
 

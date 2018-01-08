@@ -23,35 +23,39 @@ class GoodsController extends Controller{
 
     public $enableCsrfValidation = false;
 
+
    //商品列表
-    public function actionList($id){
-//        $name=\Yii::$app->request->post('name','');
-//        $sn=\Yii::$app->request->post('sn','');
-//        $model=Goods::find()->where(['like','name',$name])->andWhere(['like','sn',$sn])->all();//搜索
+    public function actionList(){
 
+        $id=\Yii::$app->request->get('id','');
+        $name=\Yii::$app->request->get('name','');
 
-        //判断是二级分类还是三级分类
-        $cate=GoodsCategory::findOne(['id'=>$id]);
-        if ($cate->depth==2){
-            //三级分类
-            //$model=Goods::find()->where(['goods_category_id'=>$id])->all();
-            $ids=[$id];
-        }else{
-            //获取二级下面的三级分类
-            $categories=$cate->children()->select('id')->andWhere(['depth'=>2])->asArray()->all();
-            $ids=ArrayHelper::map($categories,'id','id');
-        }
+           // $model=Goods::find()->where(['like','name',$name])->all();//搜索
+        if ($id){
+            //判断是二级分类还是三级分类
+            $cate=GoodsCategory::findOne(['id'=>$id]);
+            if ($cate->depth==2){
+                //三级分类
+                //$model=Goods::find()->where(['goods_category_id'=>$id])->all();
+                $ids=[$id];
+            }else{
+                //获取二级下面的三级分类
+                $categories=$cate->children()->select('id')->andWhere(['depth'=>2])->asArray()->all();
+                $ids=ArrayHelper::map($categories,'id','id');
+            }
 //        $ids=[];
 //        foreach ($categories as $category){
 //            $ids[]=$category->id;
 //        }
-        //根据三级分类id查找商品
-        $model=Goods::find()->where(['in','goods_category_id',$ids])->all();
+            //根据三级分类id查找商品
+            $model=Goods::find()->where(['in','goods_category_id',$ids])->all();
+        }else{
+            $model=Goods::find()->where(['like','name',$name])->all();
+            //var_dump($model);exit();
+        }
 
-       // $model2=GoodsIntro::find()->where(['=','goods_id',$model->id])->all();
         return $this->render('list',['model'=>$model]);
     }
-
 
     //商品详情
     public function actionShow($id){
@@ -241,7 +245,6 @@ class GoodsController extends Controller{
 
 
     //添加和显示收货地址
-
     /**
      * @param $id
      * @return string
@@ -254,8 +257,8 @@ class GoodsController extends Controller{
             $model->load($request->post(),'');
             if ($model->validate()){
                 if ($model->sort){
-                    $one=Address::findOne(['sort'=>1]);
-                    Address::updateAll(['sort'=>0],['id'=>$one->id]);//添加时若为默认则清理掉之前的默认
+                    Address::updateAll(['sort'=>0],['member_id'=>Yii::$app->user->id]);//添加时若为默认则清理掉之前的默认
+                    $model->sort=1;
                 }else{
                     $model->sort=0;
                 }
@@ -313,7 +316,6 @@ class GoodsController extends Controller{
         return $this->redirect('address');
     }
 
-
     //订单
     public function actionOrder(){
         //必须是登录状态,如未登录,则引导用户登录
@@ -321,7 +323,7 @@ class GoodsController extends Controller{
         $addres=Address::find()->where(['member_id'=>Yii::$app->user->id])->all();
         $carts = Cart::find()->where(['member_id'=>Yii::$app->user->id])->all();
         $request = Yii::$app->request;
-        //$total=0;
+
         if($request->isPost){
             $order = new Order();
             $order->load($request->post(),'');

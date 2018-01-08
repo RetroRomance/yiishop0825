@@ -82,8 +82,8 @@
                     <div class="uclist mt10">
                         <ul class="list1 fl">
                             <li><a href="">用户信息></a></li>
-                            <li><a href="">我的订单></a></li>
-                            <li><a href="">收货地址></a></li>
+                            <li><a href="http://www.yii2shop.com/goods/order">我的订单></a></li>
+                            <li><a href="http://www.yii2shop.com/goods/address">收货地址></a></li>
                             <li><a href="">我的收藏></a></li>
                         </ul>
 
@@ -470,10 +470,10 @@
             <dl id="<?=$address->id?>">
                 <dt ><?=$address->username?> <?=$address->cmbProvince?> <?=$address->cmbCity?> <?=$address->cmbArea?> <?=$address->address?> <?=$address->tel?> </dt>
                 <dd>
-                    <a href="http://www.yii2shop.com/goods/edit-ads" >修改</a>
-                    <a href="http://www.yii2shop.com/goods/del-ads" >删除</a>
+                    <a href="http://www.yii2shop.com/goods/edit-ads?id=<?=$address->id?>" >修改</a>
+                    <a href="http://www.yii2shop.com/goods/del-ads?id=<?=$address->id?>" >删除</a>
                     <?php if ($address->sort){}else{
-                        echo '<a href="http://www.yii2shop.com/goods/moren">设为默认地址</a>';
+                        echo '<a href="http://www.yii2shop.com/goods/moren?id='.$address->id.'">设为默认地址</a>';
                     } ?>
                 </dd>
             </dl>

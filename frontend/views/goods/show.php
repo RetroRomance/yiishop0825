@@ -66,8 +66,8 @@
         <div class="search fl">
             <div class="search_form">
                 <div class="form_left fl"></div>
-                <form action="" name="serarch" method="get" class="fl">
-                    <input type="text" class="txt" value="请输入商品关键字" /><input type="submit" class="btn" value="搜索" />
+                <form action="http://www.yii2shop.com/goods/list"  method="get" class="fl">
+                    <input type="text" name="name" id="name" class="txt" value="请输入商品关键字" /><input type="submit" class="btn" value="搜索" />
                 </form>
                 <div class="form_right fl"></div>
             </div>
@@ -99,8 +99,8 @@
                     <div class="uclist mt10">
                         <ul class="list1 fl">
                             <li><a href="">用户信息></a></li>
-                            <li><a href="">我的订单></a></li>
-                            <li><a href="">收货地址></a></li>
+                            <li><a href="http://www.yii2shop.com/goods/order">我的订单></a></li>
+                            <li><a href="http://www.yii2shop.com/goods/address">收货地址></a></li>
                             <li><a href="">我的收藏></a></li>
                         </ul>
 
@@ -556,10 +556,10 @@
             <?php endforeach; ?>
             <!-- 图片预览区域 start -->
             <div class="preview fl">
-                <div class="midpic">
-                    <a href="/images/preview_l1.jpg" class="jqzoom" rel="gal1">   <!-- 第一幅图片的大图 class 和 rel属性不能更改 -->
-                        <img src="/images/preview_m1.jpg" alt="" />               <!-- 第一幅图片的中图 -->
-                    </a>
+                <div class="midpic"><?php foreach($model as $goods):?>
+                    <a href="<?=$goods->logo?>" class="jqzoom" rel="gal1">   <!-- 第一幅图片的大图 class 和 rel属性不能更改 -->
+                        <img src="<?=$goods->logo?>" alt="" width="350px" />               <!-- 第一幅图片的中图 -->
+                    </a><?php endforeach;?>
                 </div>
 
                 <!--使用说明：此处的预览图效果有三种类型的图片，大图，中图，和小图，取得图片之后，分配到模板的时候，把第一幅图片分配到 上面的midpic 中，其

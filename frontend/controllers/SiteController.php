@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use backend\models\Goods;
 use frontend\models\Cart;
 use frontend\models\GoodsCategory;
 use frontend\models\Member;
@@ -80,7 +81,6 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-
         return $this->render('index');
     }
 
@@ -127,9 +127,6 @@ class SiteController extends Controller
                         $car->save();
                     }
                 }
-
-
-
 
                 //跳转
                 return $this->redirect(['site/index']);
