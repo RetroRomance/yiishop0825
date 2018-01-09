@@ -492,14 +492,33 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach($ogd as $og): ?>
-                <tr data-id="<?=$og->order_id?>">
-                    <td><a href=""><?=$og->order_id?></a></td>
-                    <td><a href=""><img src="<?=$og->logo?>" alt="" /></a></td>
-                    <td><?=$og->goods_name?></td>
-                    <td>￥<?=$og->price?> 货到付款</td>
-                    <td></td>
-                    <td></td>
+                <?php foreach($orders as $order): ?>
+                <tr data-id="<?=$order->id?>">
+                    <td><a href=""><?=$order->id?></a></td>
+                    <td>
+                        <?php foreach ($ogd as $og):?>
+                        <a href="http://www.yii2shop.com/goods/show?id=<?=$og->goods_id?>">
+                            <img src="<?=$og->logo?>" alt="" /></a>
+                        <?php endforeach;?>
+                    </td>
+                    <td><?=$order->name?></td>
+                    <td>￥<?=$order->total?> 在线支付</td>
+                    <td><?=date('Y-m-d H:i:s',$order->create_time)?></td>
+                    <td>
+                        <?php if ($order->status==0){?>
+                            <span>已取消</span>
+                        <?php }else if ($order->status==1){?>
+                            <span>待付款</span>
+                        <?php }else if ($order->status==2){?>
+                            <span>待发货</span>
+                        <?php }else if ($order->status==3){?>
+                            <span>待收货</span>
+                        <?php }else if ($order->status==4){?>
+                            <span>完成</span>
+                        <?php }else{?>
+                            <span>错误</span>
+                        <?php }?>
+                    </td>
                     <td><a href="">查看</a> | <a href="">删除</a></td>
                 </tr>
 
