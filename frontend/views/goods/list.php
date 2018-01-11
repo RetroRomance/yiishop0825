@@ -48,7 +48,7 @@
             <div class="search_form">
                 <div class="form_left fl"></div>
                 <form action="" name="serarch" method="get" class="fl">
-                    <input type="text" class="txt" value="请输入商品关键字" /><input type="submit" class="btn" value="搜索" />
+                    <input type="text" name="name" id="name" class="txt" value="请输入商品关键字" /><input type="submit" class="btn" value="搜索" />
                 </form>
                 <div class="form_right fl"></div>
             </div>

@@ -78,10 +78,13 @@ class SiteController extends Controller
      * Displays homepage.
      *
      * @return mixed
+     *
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        //OB缓存
+        $contents = $this->render('index');
+        file_put_contents('index.html',$contents);
     }
 
 
@@ -129,7 +132,7 @@ class SiteController extends Controller
                 }
 
                 //跳转
-                return $this->redirect(['site/index']);
+                return $this->redirect(['index.html']);
             }
         }
         return $this->render('login');

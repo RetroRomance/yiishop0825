@@ -8,6 +8,7 @@ use backend\models\GoodsGallery;
 use backend\models\GoodsIntro;
 use frontend\models\Address;
 use frontend\models\Cart;
+use frontend\models\Member;
 use frontend\models\Order;
 use frontend\models\OrderGoods;
 use Yii;
@@ -63,7 +64,18 @@ class GoodsController extends Controller{
         Goods::updateAllCounters(['view_times'=>1],['id'=>$id]);
         $model2=GoodsIntro::find()->where(['=','goods_id',$id])->all();//详情信息
         $model3=GoodsGallery::find()->where(['=','id',$id])->all();//相册
-        return $this->render('show',['model'=>$model,'model2'=>$model2,'model3'=>$model3]);
+        $contents= $this->render('show',['model'=>$model,'model2'=>$model2,'model3'=>$model3]);
+
+        $filename = $id . '.html';
+        $dir = 'show/';
+        //判断目录是否存在
+        if(!is_dir($dir)){
+            mkdir($dir,0777,true);
+        }
+        //生成静态文件
+        $filename = $dir . $filename;
+        file_put_contents($filename,$contents);
+        return $this->redirect('http://www.yii2shop.com/show/'.$id.'.html');
     }
 
     //商品添加到购物车
@@ -203,6 +215,22 @@ class GoodsController extends Controller{
             $html.='<li>您好，欢迎来到京西！'.\Yii::$app->user->identity->username.'[<a href="http://www.yii2shop.com/site/logout">注销</a>]';
         }
         return $html;
+    }
+
+    //获取用户登录状态
+    public function actionMemberStatus(){
+        if(Yii::$app->user->isGuest){
+            $result = [
+                'is_login'=>false,
+                'username'=>null
+            ];
+        }else{
+            $result = [
+                'is_login'=>true,
+                'username'=>Yii::$app->user->identity->username
+            ];
+        }
+        return json_encode($result);
     }
 
     //三级分类数据代码来源
@@ -389,6 +417,13 @@ class GoodsController extends Controller{
                 Cart::deleteAll(['member_id'=>Yii::$app->user->id]);
                 //提交事务
                 $transaction->commit();
+                $member=Member::findOne(['id'=>Yii::$app->user->id]);
+                Yii::$app->mailer->compose()
+                     ->setFrom('15181096018@163.com')
+                     ->setTo($member->email)
+                     ->setSubject('订单下单成功,请确认订单信息')
+                     ->setHtmlBody('<span style="color: red">下单成功</span>')
+                     ->send();
                 return $this->redirect('ok');
             }catch (Exception $e){
                 //事务回滚
@@ -416,7 +451,21 @@ class GoodsController extends Controller{
 
     //提交成功提示
     public function actionOk(){
+
         return $this->render('ok');
+    }
+
+    //redis练习
+    public function actionRedis(){
+        $redis=new \Redis();
+        $redis->set('name','张三',30);
+        $redis->set('age',18);
+        if ($redis->ttl('name')){
+            $redis->incr('age');
+        }else{
+            $redis->decr('age');
+        }
+
     }
 
 

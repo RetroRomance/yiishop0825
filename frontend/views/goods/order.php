@@ -95,8 +95,8 @@
                     <?php foreach (\frontend\models\Order::$deliveries as $id=>$delivery):?>
                     <tr <?=$id==1?'class="cur"':''?>>
                         <td>
-                            <input type="radio" name="delivery_id" value="<?=$delivery[1]?>"
-                               <?=$id==1?'checked="checked"':''?>  /><?=$delivery[0]?>
+                            <input type="radio" name="delivery_id" value="<?=$delivery[0]?>"
+                               <?=$id==1?'checked="checked"':''?> /><?=$delivery[0]?>
                         </td>
                         <td >￥<?=$delivery[1]?></td>
                         <td><?=$delivery[2]?></td>
