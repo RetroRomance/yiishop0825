@@ -6,6 +6,7 @@ use backend\models\Goods;
 use backend\models\GoodsCategory;
 use backend\models\GoodsGallery;
 use backend\models\GoodsIntro;
+use common\models\SphinxClient;
 use frontend\models\Address;
 use frontend\models\Cart;
 use frontend\models\Member;
@@ -44,15 +45,27 @@ class GoodsController extends Controller{
                 $categories=$cate->children()->select('id')->andWhere(['depth'=>2])->asArray()->all();
                 $ids=ArrayHelper::map($categories,'id','id');
             }
-//        $ids=[];
-//        foreach ($categories as $category){
-//            $ids[]=$category->id;
-//        }
             //根据三级分类id查找商品
             $model=Goods::find()->where(['in','goods_category_id',$ids])->all();
-        }else{
-            $model=Goods::find()->where(['like','name',$name])->all();
-            //var_dump($model);exit();
+        }else{//根据输入的字搜索
+            $cl = new SphinxClient();
+            $cl->SetServer ( '127.0.0.1', 9312);
+
+            $cl->SetConnectTimeout ( 10 );
+            $cl->SetArrayResult ( true );
+// $cl->SetMatchMode ( SPH_MATCH_ANY);
+            $cl->SetMatchMode ( SPH_MATCH_EXTENDED2);
+            $cl->SetLimits(0, 1000);
+            $info = $name;
+            $res = $cl->Query($info, 'mysql');//查询用到的索引名称
+            $ids=[];
+            if (isset($res['matches'])){
+                foreach ($res['matches'] as $match){
+                    $ids[]=$match['id'];
+                }
+            }
+            //var_dump($ids);exit();
+            $model=Goods::find()->where(['in','id',$ids])->all();
         }
 
         return $this->render('list',['model'=>$model]);
@@ -466,6 +479,31 @@ class GoodsController extends Controller{
             $redis->decr('age');
         }
 
+    }
+
+
+    //商品搜索测试
+    public function actionSearch(){
+
+        $cl = new SphinxClient();
+        $cl->SetServer ( '127.0.0.1', 9312);
+
+        $cl->SetConnectTimeout ( 10 );
+        $cl->SetArrayResult ( true );
+// $cl->SetMatchMode ( SPH_MATCH_ANY);
+        $cl->SetMatchMode ( SPH_MATCH_EXTENDED2);
+        $cl->SetLimits(0, 1000);
+        $info = '华为荣耀';
+        $res = $cl->Query($info, 'mysql');//查询用到的索引名称
+//print_r($cl);
+        //print_r($res);
+        $ids=[];
+        if (isset($res['matches'])){
+            foreach ($res['matches'] as $match){
+                $ids[]=$match['id'];
+            }
+        }
+        var_dump($ids);
     }
 
 

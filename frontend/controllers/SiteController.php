@@ -132,7 +132,7 @@ class SiteController extends Controller
                 }
 
                 //跳转
-                return $this->redirect(['index.html']);
+                return $this->redirect(['/index.html']);
             }
         }
         return $this->render('login');

@@ -553,17 +553,13 @@
     <div class="goods_content fl mt10 ml10">
         <!-- 商品概要信息 start -->
         <div class="summary">
-            {%logo%}
-            {*<?php foreach($model2 as $good):?>*}
-                {*<h3><strong><?=$good->content?></strong></h3>*}
-            {*<?php endforeach; ?>*}
-            {*<!-- 图片预览区域 start -->*}
-            {*<div class="preview fl">*}
-                {*<div class="midpic"><?php foreach($model as $goods):?>*}
-                    {*<a href="<?=$goods->logo?>" class="jqzoom" rel="gal1">   <!-- 第一幅图片的大图 class 和 rel属性不能更改 -->*}
-                        {*<img src="<?=$goods->logo?>" alt="" width="350px" />               <!-- 第一幅图片的中图 -->*}
-                        {*</a><?php endforeach;?>*}
-                </div>
+                            <h3><strong><p>舒舒服服的价格,慢慢贴贴的诚意</p></strong></h3>
+                            <h3><strong><p>魅蓝note</p></strong></h3>
+                        <!-- 图片预览区域 start -->
+            <div class="preview fl">
+                <div class="midpic">                    <a href="http://p1hx5260u.bkt.clouddn.com//upload/5a4a82b1ee55a.jpg" class="jqzoom" rel="gal1">   <!-- 第一幅图片的大图 class 和 rel属性不能更改 -->
+                        <img src="http://p1hx5260u.bkt.clouddn.com//upload/5a4a82b1ee55a.jpg" alt="" width="350px" />               <!-- 第一幅图片的中图 -->
+                        </a>                </div>
 
                 <!--使用说明：此处的预览图效果有三种类型的图片，大图，中图，和小图，取得图片之后，分配到模板的时候，把第一幅图片分配到 上面的midpic 中，其
                 中大图分配到 a 标签的href属性，中图分配到 img 的src上。 下面的smallpic 则表示小图区域，格式固定，在 a 标签的 rel属性中，
@@ -574,27 +570,12 @@
                     <a href="javascript:;" id="forward" class="on"></a>
                     <div class="smallpic_wrap">
                         <ul>
-                            {%zhanshi%}
-                            {*<?php foreach($model as $goods):?>*}
-                                {*<li class="cur">*}
-                                    {*<a class="zoomThumbActive" href="javascript:void(0);"*}
-                                       {*rel="{gallery: 'gal1', smallimage: '<?=$goods->logo?>',largeimage: '<?=$goods->logo?>">*}
-                                        {*<img src="<?=$goods->logo?>" alt=""/></a>*}
-                                {*</li>*}
-                            {*<?php endforeach; ?>*}
-                            {*<?php foreach($model3 as $gg):?>*}
-                                {*<li>*}
-                                    {*<a href="javascript:void(0);"*}
-                                       {*rel="{gallery: 'gal1', smallimage: '<?=$gg->path?>',largeimage: '/images/preview_l2.jpg'}">*}
-                                        {*<img src="<?=$gg->path?>"></a>*}
-                                {*</li>*}
-                                {*<!--                            <li>-->*}
-                                {*<!--                                <a href="javascript:void(0);"-->*}
-                                {*<!--                                   rel="{gallery: 'gal1', smallimage: '/images/preview_m3.jpg',largeimage: '/images/preview_l3.jpg'}">-->*}
-                                {*<!--                                    <img src="/images/preview_s3.jpg"></a>-->*}
-                                {*<!--                            </li>-->*}
-                            {*<?php endforeach; ?>*}
-                        </ul>
+                                                            <li class="cur">
+                                    <a class="zoomThumbActive" href="javascript:void(0);"
+                                       rel="{gallery: 'gal1', smallimage: 'http://p1hx5260u.bkt.clouddn.com//upload/5a4a82b1ee55a.jpg',largeimage: 'http://p1hx5260u.bkt.clouddn.com//upload/5a4a82b1ee55a.jpg">
+                                        <img src="http://p1hx5260u.bkt.clouddn.com//upload/5a4a82b1ee55a.jpg" alt=""/></a>
+                                </li>
+                                                                                </ul>
                     </div>
 
                 </div>
@@ -603,45 +584,42 @@
 
             <!-- 商品基本信息区域 start -->
             <div class="goodsinfo fl ml10">
-                {%xq1%}
-                {*<?php foreach($model as $goods):?>*}
-                    {*<ul>*}
+                                    <ul>
 
-                        {*<li><span>商品编号： </span>971344</li>*}
-                        {*<li class="market_price"><span>定价：</span><em>￥<?=$goods->market_price?></em></li>*}
-                        {*<li class="shop_price"><span>本店价：</span> <strong>￥<?=$goods->shop_price?></strong> <a href="">(降价通知)</a></li>*}
-                        {*<li><span>上架时间：</span><?=$goods->create_time?></li>*}
-                        {*<li class="star"><span>热度：</span> <?=$goods->view_times?></a></li> <!-- 此处的星级切换css即可 默认为5星 star4 表示4星 star3 表示3星 star2表示2星 star1表示1星 -->*}
+                        <li><span>商品编号： </span>971344</li>
+                        <li class="market_price"><span>定价：</span><em>￥788</em></li>
+                        <li class="shop_price"><span>本店价：</span> <strong>￥788</strong> <a href="">(降价通知)</a></li>
+                        <li><span>上架时间：</span>2018-01-02 02:50:08</li>
+                        <li class="star"><span>热度：</span> 6</a></li> <!-- 此处的星级切换css即可 默认为5星 star4 表示4星 star3 表示3星 star2表示2星 star1表示1星 -->
 
-                    {*</ul>*}
-                    {*<form action="<?=\yii\helpers\Url::to(['goods/addto-cart'])?>" method="get" class="choose">*}
-                        {*<ul>*}
+                    </ul>
+                    <form action="/goods/addto-cart" method="get" class="choose">
+                        <ul>
 
-                            {*<li>*}
-                                {*<dl>*}
-                                    {*<dt>购买数量：</dt>*}
-                                    {*<dd>*}
-                                        {*<a href="javascript:;" id="reduce_num"></a>*}
-                                        {*<input type="text" name="amount" value="1" class="amount"/>*}
-                                        {*<a href="javascript:;" id="add_num"></a>*}
-                                    {*</dd>*}
-                                {*</dl>*}
-                            {*</li>*}
+                            <li>
+                                <dl>
+                                    <dt>购买数量：</dt>
+                                    <dd>
+                                        <a href="javascript:;" id="reduce_num"></a>
+                                        <input type="text" name="amount" value="1" class="amount"/>
+                                        <a href="javascript:;" id="add_num"></a>
+                                    </dd>
+                                </dl>
+                            </li>
 
-                            {*<li>*}
-                                {*<dl>*}
-                                    {*<dt>&nbsp;</dt>*}
-                                    {*<dd>*}
-                                        {*<input type="hidden" name="goods_id" value="<?=$goods->id?>"/>*}
-                                        {*<input type="submit" value="" class="add_btn" />*}
-                                    {*</dd>*}
-                                {*</dl>*}
-                            {*</li>*}
+                            <li>
+                                <dl>
+                                    <dt>&nbsp;</dt>
+                                    <dd>
+                                        <input type="hidden" name="goods_id" value="27"/>
+                                        <input type="submit" value="" class="add_btn" />
+                                    </dd>
+                                </dl>
+                            </li>
 
-                        {*</ul>*}
-                    {*</form>*}
-                {*<?php endforeach; ?>*}
-            </div>
+                        </ul>
+                    </form>
+                            </div>
             <!-- 商品基本信息区域 end -->
         </div>
         <!-- 商品概要信息 end -->
@@ -662,21 +640,18 @@
                 <div class="introduce detail_div none">
                     <div class="attr mt15">
                         <ul>
-                            {%xq2%}
-                            {*<?php foreach($model as $goods):?>*}
-                                {*<li><span>商品名称：</span><?=$goods->name?></li>*}
-                                {*<li><span>商品编号：</span><?=$goods->sn?></li>*}
-                                {*<li><span>品牌：</span><?=$goods->brand_id?></li>*}
-                                {*<li><span>上架时间：</span><?=$goods->create_time?></li>*}
-                                {*<li><span>商品毛重：</span>2.47kg</li>*}
-                                {*<li><span>商品产地：</span>中国大陆</li>*}
-                                {*<li><span>显卡：</span>集成显卡</li>*}
-                                {*<li><span>触控：</span>触控</li>*}
-                                {*<li><span>厚度：</span>正常厚度（>25mm）</li>*}
-                                {*<li><span>处理器：</span>Intel i5</li>*}
-                                {*<li><span>尺寸：</span>12英寸</li>*}
-                            {*<?php endforeach; ?>*}
-                        </ul>
+                                                            <li><span>商品名称：</span>魅蓝note6</li>
+                                <li><span>商品编号：</span>2018010200011</li>
+                                <li><span>品牌：</span>15</li>
+                                <li><span>上架时间：</span>2018-01-02 02:50:08</li>
+                                <li><span>商品毛重：</span>2.47kg</li>
+                                <li><span>商品产地：</span>中国大陆</li>
+                                <li><span>显卡：</span>集成显卡</li>
+                                <li><span>触控：</span>触控</li>
+                                <li><span>厚度：</span>正常厚度（>25mm）</li>
+                                <li><span>处理器：</span>Intel i5</li>
+                                <li><span>尺寸：</span>12英寸</li>
+                                                    </ul>
                     </div>
 
                     <div class="desc mt10">
@@ -1025,7 +1000,7 @@
 </script>
 <script>
     //发送ajax请求获取用户登录状态,根据登录状态改变状态信息
-    $.getJSON("<?=\yii\helpers\Url::to(['goods/member-status'])?>",function (json) {
+    $.getJSON("/goods/member-status",function (json) {
         if (json.is_login){
             $("#member_status").html('您好,欢迎来到本商城'+json.username+'[<a href="http://www.yii2shop.com/site/logout">注销</a>]');
         }
